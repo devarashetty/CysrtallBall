@@ -1,8 +1,6 @@
-*.swp
-*.pem
-*.pyc
-*.DS_Store
-.cache
+.env
 node_modules
-build
-__pycache__
+dist
+*.log
+package-lock.json
+yarn.lock
