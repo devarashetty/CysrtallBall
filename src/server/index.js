@@ -11,6 +11,9 @@ import typeDefs from './graphql/schemas/schemas';
 import resolvers from './graphql/resolvers/resolvers';
 import schemaDirectives from './graphql/directives/directives';
 import dotenv from 'dotenv';
+import path from 'path';
+// import Image from '../python/Cap1.JPG';
+import {spawn} from 'child_process';
 
 dotenv.config({ path: '../../EnvironmentVariables.env' })
 const { NODE_ENV, SESSION_NAME, SESSION_SECRET, SESSION_MAX_AGE, MONGO_DB_URI, PORT } = process.env;
@@ -22,12 +25,12 @@ mongoose.set('useCreateIndex', true);
 // Set Secure Headers with Helmet
 app.use(helmet());
 app.use(helmet.permittedCrossDomainPolicies());
-
-// Serve React Application
-// if (NODE_ENV !== 'development') {
 app.use(express.static('dist'));
-// }
-
+//C:\Users\1025040\Documents\git\CysrtallBall\src\python\Cap1.JPG
+//C:\Users\1025040\Documents\git\CysrtallBall\src\python\Cap1.JPG
+app.get('/images/mask',(req, res) => {
+  res.sendFile( path.join(__dirname,'../python/Cap1.JPG'))
+})
 // Set User Session
 const MongoStore = connectMongo(session);
 app.use(
@@ -82,5 +85,12 @@ mongoose.connection.once('open', () => {
   app.listen({ port }, () => {
     console.log(`Server running on port ${port}`);
   });
+  app.get('/pythonscripts', (req, res) => {
+    const pythonProcess = spawn('python',[path.join(__dirname,'../python/segment.py'),path.join(__dirname,'../python/Cap1.JPG')]);
+    pythonProcess.stdout.on('data', (data) => {
+      console.log("=================",data, data.toJSON());
+    });
+    return res.send("running python scriptsssssssss");
+  })
 });
 mongoose.connection.on('error', error => console.error(error));
