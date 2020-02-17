@@ -1,10 +1,8 @@
-from cv2 import cv2
+import cv2
 import numpy as np
 
 def segment_ycrcb(orig, params, tola, tolb):
     ycrcb_im = cv2.cvtColor(orig, cv2.COLOR_BGR2YCR_CB)
-    cv2.imshow("ycr img",ycrcb_im)
-    cv2.imwrite('C:\\Users\\1025040\\Documents\\git\\CysrtallBall\\src\\python\\Cap1.JPG', ycrcb_im)
     Cb_key, Cr_key = params
     blue = ycrcb_im[:, :, 2]
     red = ycrcb_im[:, :, 1]
@@ -37,7 +35,6 @@ def get_params_ycrcb(img, region):
 
 def get_params_hls(img, region):
     hls_img = cv2.cvtColor(np.array(img), cv2.COLOR_BGR2HLS)
-   # cv2.imwrite('C:/Machine learning/Body-Measurement-using-Computer-Vision-master/Images/lolu2_hls_img.jpg', hls_img)
     r = [int(x) for x in region]
     region = hls_img[int(region[1]):int(region[1] + region[3]),
                      int(region[0]):int(region[0] + region[2])]
@@ -107,10 +104,8 @@ def segmenter(img):
     sat_mul_hi  = cv2.getTrackbarPos('Sat mul high', 'controls')
     scale_blur  = cv2.getTrackbarPos('Light mask strength', 'controls')
     blur_size  = cv2.getTrackbarPos('Light mask size', 'controls')
-    print("hello");
     key_mask = get_mask( img, key_param[0], tola, tolb, low_thresh ,high_thresh, sz, space, erode_sz)
-    cv2.imwrite('C:/Machine learning/object-size-master/sriwhiteBlack1.jpg',key_mask*255)
-    print('mask',key_mask) 
+    cv2.imwrite('C:\\Users\\1025040\\Documents\\git\\CysrtallBall\\src\\python\\whiteBlack1.jpg',key_mask*255)
     cv2.imshow('img',key_mask)
    
     return key_mask*255

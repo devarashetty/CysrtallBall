@@ -12,8 +12,9 @@ import resolvers from './graphql/resolvers/resolvers';
 import schemaDirectives from './graphql/directives/directives';
 import dotenv from 'dotenv';
 import path from 'path';
-// import Image from '../python/Cap1.JPG';
 import {spawn} from 'child_process';
+import {PythonShell} from 'python-shell';
+import fs from 'fs';
 
 dotenv.config({ path: '../../EnvironmentVariables.env' })
 const { NODE_ENV, SESSION_NAME, SESSION_SECRET, SESSION_MAX_AGE, MONGO_DB_URI, PORT } = process.env;
@@ -84,11 +85,21 @@ mongoose.connection.once('open', () => {
   const port = PORT || 8080;
   app.listen({ port }, () => {
     console.log(`Server running on port ${port}`);
-  });
+  })
   app.get('/pythonscripts', (req, res) => {
-    const pythonProcess = spawn('python',[path.join(__dirname,'../python/segment.py'),path.join(__dirname,'../python/Cap1.JPG')]);
-    pythonProcess.stdout.on('data', (data) => {
-      console.log("=================",data, data.toJSON());
+    let pyshell = new PythonShell(path.join(__dirname,'../python/extreme_points.py'));
+    pyshell.on('message', function (message) {
+      console.log("message is " , message);
+      let data = JSON.parse(message);
+      console.log(typeof(message), data, data.height);
+    });
+     
+    pyshell.end(function (err,code,signal) {
+      if (err) throw err;
+      console.log('The exit code was: ' + code);
+      console.log('The exit signal was: ' + signal);
+      console.log('finished');
+      console.log('finished');
     });
     return res.send("running python scriptsssssssss");
   })
